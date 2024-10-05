@@ -2,7 +2,7 @@ import pytest
 import requests
 import random
 import string
-from helpers import url
+from urls import url, register_new_courier, login_courier, delete_courier
 
 
 # метод регистрации нового курьера возвращает список из логина и пароля
@@ -31,7 +31,7 @@ def register_new_courier_return_login_password_delete_courier():
     }
 
     # отправляем запрос на регистрацию курьера и сохраняем ответ в переменную response
-    response = requests.post(f"{url}/api/v1/courier", data=payload)
+    response = requests.post(f"{url}{register_new_courier}", data=payload)
 
     # если регистрация прошла успешно (код ответа 201), добавляем в список логин и пароль курьера
     if response.status_code == 201:
@@ -43,6 +43,6 @@ def register_new_courier_return_login_password_delete_courier():
     yield login_pass
     # удаляем курьера
     data = {"login": login, "password": password}
-    response_login = requests.post(f"{url}/api/v1/courier/login", json=data)
+    response_login = requests.post(f"{url}{login_courier}", json=data)
     id_courier = response_login.json()['id']
-    requests.delete(f"{url}/api/v1/courier/{id_courier}")
+    requests.delete(f"{url}{delete_courier}/{id_courier}")

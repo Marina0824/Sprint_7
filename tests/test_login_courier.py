@@ -1,7 +1,8 @@
 import pytest
 import allure
 import requests
-from helpers import url, generate_random_string
+from urls import url, login_courier
+from helpers import generate_random_string
 
 
 class TestLoginCourier:
@@ -10,7 +11,7 @@ class TestLoginCourier:
         login, password, _ = register_new_courier_return_login_password_delete_courier
         data = {"login": login, "password": password}
 
-        response = requests.post(f"{url}/api/v1/courier/login", json=data)
+        response = requests.post(f"{url}{login_courier}", json=data)
         id_courier = response.json()['id']
 
         assert response.status_code == 200
@@ -21,7 +22,7 @@ class TestLoginCourier:
         _, password, _ = register_new_courier_return_login_password_delete_courier
         data = {"password": password}
 
-        response = requests.post(f"{url}/api/v1/courier/login", json=data)
+        response = requests.post(f"{url}{login_courier}", json=data)
 
         assert response.status_code == 400
         assert response.json() == {'code': 400, 'message': 'Недостаточно данных для входа'}
@@ -32,7 +33,7 @@ class TestLoginCourier:
         login, _, _ = register_new_courier_return_login_password_delete_courier
         data = {"login": login}
 
-        response = requests.post(f"{url}/api/v1/courier/login", json=data)
+        response = requests.post(f"{url}{login_courier}", json=data)
 
         assert response.status_code == 400
         assert response.json() == {'code': 400, 'message': 'Недостаточно данных для входа'}
@@ -43,7 +44,7 @@ class TestLoginCourier:
         pas = generate_random_string(10)
         data = {"login": log, "password": pas}
 
-        response = requests.post(f"{url}/api/v1/courier/login", json=data)
+        response = requests.post(f"{url}{login_courier}", json=data)
 
         assert response.status_code == 404
         assert response.json() == {'code': 404, 'message': 'Учетная запись не найдена'}
